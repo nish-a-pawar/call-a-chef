@@ -3,13 +3,13 @@ import Header from "../components/Header";
 import { Outlet } from "react-router-dom";
 const MainLayout = () => {
   return (
-    <>
+    <div className="min-h-screen flex flex-col bg-gray-50">
       <Header />
-      <main className="min-h-[80vh] p-4 container mx-auto my-12 ">
+      <main className="flex-grow container mx-auto py-12 px-6 flex justify-center items-center">
         <Outlet />
       </main>
       <Footer />
-    </>
+    </div>
   );
 };
 
