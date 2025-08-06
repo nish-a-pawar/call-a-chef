@@ -1,4 +1,5 @@
 import React from "react";
+import MainLayout from "../layouts/MainLayout";
 
 const topMeals = [
   {
@@ -30,7 +31,6 @@ const topMeals = [
 const Home = () => {
   return (
     <div className="min-h-[85vh] bg-base-100 text-neutral px-6 py-12">
-    
       <div className="text-center mb-12">
         <div className="text-7xl mb-4">👨‍🍳</div>
         <h1 className="text-4xl font-extrabold mb-3 tracking-tight">
@@ -49,44 +49,40 @@ const Home = () => {
         <h2 className="text-2xl font-bold mb-6 text-center">
           🍽️ Featured Dishes by Top Chefs
         </h2>
-      
-            <div className="grid gap-6 md:grid-cols-3 sm:grid-cols-2 grid-cols-1">
-              {topMeals.map((meal) => (
-                <div
-                  key={meal.id}
-                  className="card bg-base-100 shadow-md hover:shadow-xl transition duration-300 border border-gray-100 rounded-xl"
-                >
-                  <figure className="relative">
-                    <img
-                      src={meal.image}
-                      alt={meal.title}
-                      className="w-full h-48 object-cover rounded-t-xl"
-                    />
-                    <span className="absolute top-2 left-2 badge badge-secondary text-white shadow">
-                      Top Pick
-                    </span>
-                  </figure>
-                  <div className="card-body text-left p-4">
-                    <h3 className="text-lg font-bold text-neutral">
-                      {meal.title}
-                    </h3>
-                    <p className="text-sm text-gray-500 mb-2">by {meal.chef}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="font-semibold text-secondary text-base">
-                        {meal.price}
-                      </span>
-                      <button className="btn btn-sm btn-secondary hover:scale-105 transition-transform">
-                        Order Now
-                      </button>
-                    </div>
-                  </div>
+
+        <div className="grid gap-6 md:grid-cols-3 sm:grid-cols-2 grid-cols-1">
+          {topMeals.map((meal) => (
+            <div
+              key={meal.id}
+              className="card bg-base-100 shadow-md hover:shadow-xl transition duration-300 border border-gray-100 rounded-xl"
+            >
+              <figure className="relative">
+                <img
+                  src={meal.image}
+                  alt={meal.title}
+                  className="w-full h-48 object-cover rounded-t-xl"
+                />
+                <span className="absolute top-2 left-2 badge badge-secondary text-white shadow">
+                  Top Pick
+                </span>
+              </figure>
+              <div className="card-body text-left p-4">
+                <h3 className="text-lg font-bold text-neutral">{meal.title}</h3>
+                <p className="text-sm text-gray-500 mb-2">by {meal.chef}</p>
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-secondary text-base">
+                    {meal.price}
+                  </span>
+                  <button className="btn btn-sm btn-secondary hover:scale-105 transition-transform">
+                    Order Now
+                  </button>
                 </div>
-              ))}
+              </div>
             </div>
-     
+          ))}
         </div>
       </div>
-
+    </div>
   );
 };
 
