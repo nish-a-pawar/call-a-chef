@@ -3,6 +3,7 @@ import MainLayout from './layouts/MainLayout';
 import Home from './pages/Home';
 import './App.css'
 import MealsPage from './pages/MealsPage';
+import ChefDashboard from './pages/ChefDashboard.jsx';
 
 function App() {
 
@@ -16,6 +17,8 @@ function App() {
         <Route path="/menu" element={<MainLayout />}>
           <Route index element={<MealsPage />} />
         </Route>
+        
+        <Route path="/chef-dashboard" element={<ChefDashboard />} />
       </Routes>
     </BrowserRouter>
   )
