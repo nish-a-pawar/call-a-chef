@@ -19,7 +19,7 @@ export const getMealsRepo = async () => {
 };
 
 // Get a single meal by ID
-export const findMealByIdRepo = async (id) => {
+export const findMealByIdRepo = async (id) => { // FIX: consistent naming
     try {
         return await Meal.findById(id).lean();
     } catch (error) {

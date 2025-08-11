@@ -2,6 +2,7 @@ import express from 'express';
 import {
     createMeal,
     getMeals,
+    getMealById,
     updateMeal,
     deleteMeal
 } from '../controllers/mealController.js';
@@ -13,6 +14,9 @@ mealRouter.post('/', createMeal);
 
 // Get all meals
 mealRouter.get('/', getMeals);
+
+// ✅ Get a meal by ID
+mealRouter.get('/:id', getMealById);
 
 // Update a meal by ID
 mealRouter.put('/:id', updateMeal);

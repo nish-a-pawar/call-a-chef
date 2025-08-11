@@ -1,6 +1,7 @@
 import {
     createMealServ,
     getMealsServ,
+    getMealByIdServ, // ✅ matches service name
     updateMealServ,
     deleteMealServ
 } from "../services/mealService.js";
@@ -8,18 +9,10 @@ import {
 // Create meal
 export async function createMeal(req, res) {
     try {
-        const result = await createMealServ(req.body);
-        res.status(201).json({
-            success: true,
-            message: "Meal created successfully",
-            data: result
-        });
+        const meal = await createMealServ(req.body);
+        res.status(201).json({ success: true, message: "Meal created", data: meal });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        res.status(400).json({ success: false, error: error.message });
     }
 }
 
@@ -27,34 +20,29 @@ export async function createMeal(req, res) {
 export async function getMeals(req, res) {
     try {
         const meals = await getMealsServ();
-        res.status(200).json({
-            success: true,
-            data: meals
-        });
+        res.status(200).json({ success: true, data: meals });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        res.status(404).json({ success: false, error: error.message });
+    }
+}
+
+// Get meal by ID
+export async function getMealById(req, res) {
+    try {
+        const meal = await getMealByIdServ(req.params.id);
+        res.status(200).json({ success: true, data: meal });
+    } catch (error) {
+        res.status(404).json({ success: false, error: error.message });
     }
 }
 
 // Update meal
 export async function updateMeal(req, res) {
     try {
-        const updatedMeal = await updateMealServ(req.params.id, req.body);
-        res.status(200).json({
-            success: true,
-            message: "Meal updated successfully",
-            data: updatedMeal
-        });
+        const meal = await updateMealServ(req.params.id, req.body);
+        res.status(200).json({ success: true, message: "Meal updated", data: meal });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        res.status(400).json({ success: false, error: error.message });
     }
 }
 
@@ -62,15 +50,8 @@ export async function updateMeal(req, res) {
 export async function deleteMeal(req, res) {
     try {
         await deleteMealServ(req.params.id);
-        res.status(200).json({
-            success: true,
-            message: "Meal deleted successfully"
-        });
+        res.status(200).json({ success: true, message: "Meal deleted" });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        res.status(400).json({ success: false, error: error.message });
     }
 }
