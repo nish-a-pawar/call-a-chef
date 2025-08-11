@@ -5,17 +5,26 @@ import serverConfig from './config/serverConfig.js';
 import mealRouter from './routes/mealRoutes.js';
 
 const app = express();
+
+// Middleware
 app.use(cors());
 app.use(express.json());
 
+// Health check route
+app.get("/check", (req, res) => {
+    res.send('Call-a-chef API is running');
+});
 
-app.get("/check",(req,res)=>{
-    res.send('Call-a-chef api is running');
-})
-
+// Routes
 app.use("/meals", mealRouter);
 
-app.listen(serverConfig.PORT, () => {
-    connectDB(); // Executing db connection function
-    console.log(`Server got started at port ${serverConfig.PORT}`)
-})
+// Start the server
+app.listen(serverConfig.PORT, async () => {
+    try {
+        await connectDB(); // Connect to database
+        console.log(`✅ Server started on port ${serverConfig.PORT}`);
+    } catch (error) {
+        console.error("❌ Database connection failed:", error.message);
+        process.exit(1); // Stop server if DB fails
+    }
+});
