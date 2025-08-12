@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import MenuCard from "../components/MenuCard";
 
 function MealsPage() {
+
+  const [search, setSearch] = useState("");
+
+
   const meals = [
     {
       title: "Paneer Tikka",
@@ -29,9 +33,25 @@ function MealsPage() {
     },
   ];
 
+  const filteredMeals = meals.filter((meal) => 
+    meal.title.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
-    <div className="flex flex-wrap gap-4 justify-start items-start px-4">
-      {meals.map((meal, idx) => (
+    <div className="px-4">
+      <div className="my-6 flex justify-center">
+        <input 
+          type="text"
+          placeholder="Search meals..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full max-w-md px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+        />
+      </div>
+
+    <div className="flex flex-wrap gap-4 justify-start items-start">
+      {filteredMeals.length > 0 ? (
+      filteredMeals.map((meal, idx) => (
         <MenuCard
           key={idx}
           imageUrl={meal.imageUrl}
@@ -39,7 +59,11 @@ function MealsPage() {
           description={meal.description}
           price={meal.price}
         />
-      ))}
+      ))
+      ) : (
+        <p className="text-2xl text-gray-500">No meal found</p>
+      )}
+    </div>
     </div>
   );
 }
