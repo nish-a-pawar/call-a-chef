@@ -6,20 +6,13 @@ import serverConfig from "./config/serverConfig.js";
 import userRouter from "./routes/userRoutes.js";
 import dotenv from "dotenv";
 import http from "http";
-import { Server } from "socket.io";
-import { setupLocationSocket } from "./socket/locationSocket.js";
 
-import mealRouter from './routes/mealRoutes.js';
 
 
 dotenv.config();
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-  },
-});
+
+
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -34,14 +27,9 @@ app.get("/ping", (req, res) => {
 });
 
 app.use("/auth", userRouter);
-setupLocationSocket(io);
-server.listen(serverConfig.PORT, () => {
-  connectDB();
-  console.log(`Server got started at port ${serverConfig.PORT}`);
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+
+
 
 // Health check route
 app.get("/check", (req, res) => {

@@ -3,9 +3,9 @@ import User from "../models/userSchema.js";
 
 export const signup = async (req, res) => {
   try {
-    const { name, email, password, role ,location} = req.body;
+    const { name, email, password, role, location } = req.body;
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !location) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -14,7 +14,7 @@ export const signup = async (req, res) => {
       email,
       password,
       role,
-      location
+      location // { lat, lng }
     });
 
     return res.status(201).json({

@@ -12,23 +12,42 @@ export const registerUser = createAsyncThunk(
   "/auth/register",
   async (userData) => {
     try {
-      const responsePromise = axiosInstance.post("/auth/register", userData);
+      // Get location from browser before sending
+      const position = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: true,
+          timeout: 10000,
+        });
+      });
+
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      const payload = {
+        ...userData,
+        location: {
+          type: "Point",
+          coordinates: [longitude, latitude], // GeoJSON expects [lng, lat]
+        },
+      };
+
+      const responsePromise = axiosInstance.post("/auth/register", payload);
 
       await toast.promise(responsePromise, {
         loading: "Hold back tight, we're registering you...",
         success: (res) => res?.data?.message || "Registration successful!",
-        error:
-          "Something went wrong. Please try again!",
+        error: "Something went wrong. Please try again!",
       });
 
       const response = await responsePromise;
       return response.data;
     } catch (error) {
-      console.log("Login error:", error);
+      console.log("Register error:", error);
       throw error;
     }
   }
 );
+
 
 export const loginUser = createAsyncThunk("/auth/signin", async (userData) => {
   try {

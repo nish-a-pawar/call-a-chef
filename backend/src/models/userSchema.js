@@ -22,19 +22,13 @@ const userSchema = new mongoose.Schema({
     enum: ["User", "Chef", "Admin"],
     default: "User",
   },
-  location: {
-  type: {
-    type: String,
-    enum: ["Point"],
-    default: "Point",
-  },
-  coordinates: {
-    type: [Number], // [longitude, latitude]
-    default: [0, 0],
-  },
-},
+location: {
+    city: {
+      type: String,
+      required:false 
+    }
+  }
 });
 
-// ✅ Add 2dsphere index to enable location queries
-userSchema.index({ location: "2dsphere" });
+
 export default mongoose.model("User", userSchema);

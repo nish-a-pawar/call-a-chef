@@ -1,14 +1,24 @@
 import bcrypt from "bcryptjs";
+import fetch from "node-fetch";
 import { createUser, findUserByEmail } from "../repositories/userRepository.js";
 import { generateToken } from "../utils/generateToken.js";
 
-export const registerUser = async ({
-  name,
-  email,
-  password,
-  mobileNumber,
-  role,
-}) => {
+async function getCityFromCoords(lat, lng) {
+  const apiKey = "ac589f25702949919c08f3e09ce8597e"
+  const res = await fetch(
+    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&key=${apiKey}`
+  );
+  const data = await res.json();
+  return (
+    data.address.city ||
+    data.address.town ||
+    data.address.village ||
+    "Unknown"
+  );
+}
+
+// REGISTER
+export const registerUser = async ({ name, email, password, role, location }) => {
   const existingUser = await findUserByEmail(email);
   if (existingUser) {
     throw new Error("User already exists with this email");
@@ -16,12 +26,15 @@ export const registerUser = async ({
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
+  // Get city name from lat/lng
+  const cityName = await getCityFromCoords(location.lat, location.lng);
+
   const user = await createUser({
     name,
     email,
     password: hashedPassword,
-
-    role: role || "user", // default role is 'user'
+    role: role || "User",
+    location: { city: cityName }
   });
 
   return {
@@ -29,39 +42,32 @@ export const registerUser = async ({
     name: user.name,
     email: user.email,
     role: user.role,
+    location: user.location
   };
 };
 
+// LOGIN
 export const loginUser = async ({ email, password }) => {
-  try {
-    const user = await findUserByEmail(email);
-    if (!user) {
-      console.log("❌ User not found");
-      throw new Error("Invalid email or password");
-    }
-
-    console.log("🔑 Input password:", password);
-    console.log("🔒 DB password:", user.password);
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    console.log("✅ bcrypt match:", isMatch);
-
-    if (!isMatch) {
-      throw new Error("Invalid email or password");
-    }
-
-    const token = generateToken(user._id);
-    return {
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
-      token,
-    };
-  } catch (error) {
-    console.log("🔥 Login error:", error.message);
-    throw error;
+  const user = await findUserByEmail(email);
+  if (!user) {
+    throw new Error("Invalid email or password");
   }
+
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    throw new Error("Invalid email or password");
+  }
+
+  const token = generateToken(user._id);
+
+  return {
+    user: {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      location: user.location 
+    },
+    token,
+  };
 };

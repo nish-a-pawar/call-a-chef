@@ -3,13 +3,13 @@ import { Eye, EyeOff, Lock, Mail, User, Users } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { loginUser, registerUser } from "../redux/authSlice";
 import { toast } from "react-hot-toast";
-import socket from "../utils/socket";
+
 import LocationModal from "./LocationModal";
 
 const LoginRegisterModal = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const [showLocationModal, setShowLocationModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showLocationModal, setShowLocationModal] = useState(false);
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
@@ -20,53 +20,55 @@ const LoginRegisterModal = () => {
     location: { lat: null, lng: null },
   });
 
+  // Show login modal on mount
   useEffect(() => {
-    if (!isLogin) {
-      setShowLocationModal(true);
-    }
-  }, [isLogin]);
+    document.getElementById("login_modal")?.showModal();
+  }, []);
 
- const handleLocationConfirm = (coords) => {
-  if (coords) {
-    setFormData((prev) => ({
-      ...prev,
-      location: { lat: coords.lat, lng: coords.lng }, // ✅ correct object keys
-    }));
-  }
-  setShowLocationModal(false);
-};
+  const handleLocationConfirm = (coords) => {
+    if (coords) {
+      setFormData((prev) => ({
+        ...prev,
+        location: { lat: coords.lat, lng: coords.lng },
+      }));
+    }
+    setShowLocationModal(false);
+
+    
+    const modal = document.getElementById("login_modal");
+    if (modal) modal.showModal();
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  useEffect(() => {
-    const modal = document.getElementById("login_modal");
-    if (modal) modal.showModal();
-  }, []);
-
-  useEffect(() => {
-    if (!isLogin) {
-      setShowLocationModal(true); // Open Leaflet modal
+  const handleToggleMode = () => {
+    if (isLogin) {
+     
+      document.getElementById("login_modal")?.close();
+      setIsLogin(false);
+      setTimeout(() => setShowLocationModal(true), 200); // delay for smooth transition
+    } else {
+      setIsLogin(true);
     }
-  }, [isLogin]);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (isLogin) {
-        // LOGIN
         if (!formData.email || !formData.password) {
           toast.error("Please enter email and password");
           return;
         }
-        await dispatch(
-          loginUser({ email: formData.email, password: formData.password })
-        ).unwrap();
-        document.getElementById("login_modal").close();
+        await dispatch(loginUser({
+          email: formData.email,
+          password: formData.password
+        })).unwrap();
+        document.getElementById("login_modal")?.close();
       } else {
-        // REGISTER
         if (
           !formData.fullName ||
           !formData.email ||
@@ -77,17 +79,14 @@ const LoginRegisterModal = () => {
           toast.error("Please fill all fields & confirm location");
           return;
         }
-        const user = await dispatch(
-          registerUser({
-            name: formData.fullName,
-            email: formData.email,
-            password: formData.password,
-            role: formData.role,
-            location: formData.location,
-          })
-        ).unwrap();
+        const user = await dispatch(registerUser({
+          name: formData.fullName,
+          email: formData.email,
+          password: formData.password,
+          role: formData.role,
+          location: formData.location,
+        })).unwrap();
 
-        // Send location via socket after successful register
         if (user?.id) {
           socket.emit("updateLocation", {
             userId: user.id,
@@ -95,13 +94,15 @@ const LoginRegisterModal = () => {
             longitude: formData.location.lng,
           });
         }
-      }
 
-      setIsLogin(true);
+        // Switch to login after registration
+        setIsLogin(true);
+      }
     } catch (err) {
       toast.error(err?.message || "Something went wrong");
     }
   };
+
   return (
     <>
       <dialog id="login_modal" className="modal">
@@ -192,7 +193,10 @@ const LoginRegisterModal = () => {
               </div>
             )}
 
-            <button className="btn btn-secondary w-full" onClick={handleSubmit}>
+            <button
+              className="btn btn-secondary w-full"
+              onClick={handleSubmit}
+            >
               {isLogin ? "Login" : "Register"}
             </button>
           </div>
@@ -201,13 +205,14 @@ const LoginRegisterModal = () => {
             {isLogin ? "Don't have an account?" : "Already registered?"}
             <span
               className="text-secondary font-bold ml-1 cursor-pointer"
-              onClick={() => setIsLogin(!isLogin)}
+              onClick={handleToggleMode}
             >
               {isLogin ? "Register" : "Login"}
             </span>
           </p>
         </div>
       </dialog>
+
       {showLocationModal && (
         <LocationModal
           isOpen={showLocationModal}
@@ -220,5 +225,3 @@ const LoginRegisterModal = () => {
 };
 
 export default LoginRegisterModal;
-
-
