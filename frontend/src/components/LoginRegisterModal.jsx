@@ -26,15 +26,15 @@ const LoginRegisterModal = () => {
     }
   }, [isLogin]);
 
-  const handleLocationConfirm = (coords) => {
-    if (coords) {
-      setFormData((prev) => ({
-        ...prev,
-        location: { lat: coords[0], lng: coords[1] },
-      }));
-    }
-    setShowLocationModal(false);
-  };
+ const handleLocationConfirm = (coords) => {
+  if (coords) {
+    setFormData((prev) => ({
+      ...prev,
+      location: { lat: coords.lat, lng: coords.lng }, // ✅ correct object keys
+    }));
+  }
+  setShowLocationModal(false);
+};
 
   const handleChange = (e) => {
     const { name, value } = e.target;

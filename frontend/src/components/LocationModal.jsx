@@ -3,50 +3,72 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
-// Fix default icon issue in leaflet
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
-  iconUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-  shadowUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-});
+const LocationModal = ({ isOpen, onClose, onConfirm }) => {
+  const [coords, setCoords] = useState(null);
 
-export default function LocationModal() {
-  const [position, setPosition] = useState(null);
+  // Fix marker icon
+  const markerIcon = new L.Icon({
+    iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+  });
 
   useEffect(() => {
-    // This will trigger browser's location permission popup
-    if (navigator.geolocation) {
+    if (isOpen) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
-          setPosition([pos.coords.latitude, pos.coords.longitude]);
+          setCoords({
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+          });
         },
         (err) => {
-          console.error("Location access denied:", err);
+          console.error("Location error:", err);
+          alert("Please allow location access to continue.");
         }
       );
-    } else {
-      console.error("Geolocation is not supported by this browser.");
     }
-  }, []);
+  }, [isOpen]);
+
+  if (!isOpen) return null;
 
   return (
-    <div style={{ height: "400px" }}>
-      {position ? (
-        <MapContainer center={position} zoom={13} style={{ height: "100%" }}>
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <Marker position={position}>
-            <Popup>Your location</Popup>
-          </Marker>
-        </MapContainer>
-      ) : (
-        <p>Detecting location...</p>
-      )}
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white p-4 rounded w-[500px] h-[500px] flex flex-col">
+        <h2 className="text-lg font-bold mb-2">Confirm Your Location</h2>
+        {coords ? (
+          <MapContainer
+            center={[coords.lat, coords.lng]}
+            zoom={15}
+            style={{ height: "100%", flex: 1 }}
+          >
+            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            <Marker position={[coords.lat, coords.lng]} icon={markerIcon}>
+              <Popup>You are here</Popup>
+            </Marker>
+          </MapContainer>
+        ) : (
+          <p>Fetching your location...</p>
+        )}
+        <div className="mt-2 flex justify-end space-x-2">
+          <button
+            className="bg-gray-400 px-4 py-1 rounded"
+            onClick={onClose}
+          >
+            Cancel
+          </button>
+          <button
+            className="bg-green-500 text-white px-4 py-1 rounded"
+            onClick={() => {
+              if (coords) onConfirm(coords);
+            }}
+          >
+            Confirm
+          </button>
+        </div>
+      </div>
     </div>
   );
-}
+};
+
+export default LocationModal;
