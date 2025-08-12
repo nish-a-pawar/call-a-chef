@@ -4,8 +4,10 @@ import connectDB from "./config/db_config.js";
 
 import serverConfig from "./config/serverConfig.js";
 import userRouter from "./routes/userRoutes.js";
+import mealRouter from "./routes/mealRoutes.js"
 import dotenv from "dotenv";
 import http from "http";
+
 
 
 

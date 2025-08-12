@@ -89,8 +89,11 @@ const LocationModal = ({ isOpen, onClose, onConfirm }) => {
             className="bg-green-500 text-white px-4 py-1 rounded"
             onClick={() => {
               if (coords) {
-              
-                onConfirm({ city });
+                onConfirm({
+                  lat: coords.lat,
+                  lng: coords.lng,
+                  city: city,
+                });
               }
             }}
           >

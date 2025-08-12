@@ -2,19 +2,35 @@ import { loginUser, registerUser } from "../services/userServices.js";
 import User from "../models/userSchema.js";
 
 export const signup = async (req, res) => {
+  console.log("Signup route hit with body:", req.body);
+
   try {
     const { name, email, password, role, location } = req.body;
 
-    if (!name || !email || !password || !location) {
-      return res.status(400).json({ message: "All fields are required" });
+    if (!name || !email || !password) {
+      return res
+        .status(400)
+        .json({ message: "Name, email and password are required" });
     }
 
+    if (
+      !location ||
+      !Array.isArray(location.coordinates) ||
+      location.coordinates.length !== 2 ||
+      typeof location.coordinates[0] !== "number" ||
+      typeof location.coordinates[1] !== "number"
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Valid location with lat and lng is required" });
+    }
+    console.log("Before calling registerUser");
     const user = await registerUser({
       name,
       email,
       password,
       role,
-      location // { lat, lng }
+      location, // { lat, lng }
     });
 
     return res.status(201).json({
@@ -22,21 +38,22 @@ export const signup = async (req, res) => {
       user,
     });
   } catch (error) {
+    console.error(error);
     return res.status(500).json({ message: error.message });
   }
 };
 
 export const login = async (req, res) => {
-  
   try {
     const { email, password } = req.body;
 
     if (!email || !password)
-      return res.status(400).json({ message: "All fields are required" });
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
 
     const { user, token } = await loginUser({ email, password });
 
-    
     res
       .cookie("token", token, {
         httpOnly: true,
@@ -51,6 +68,7 @@ export const login = async (req, res) => {
         token,
       });
   } catch (error) {
+    console.error(error);
     return res.status(401).json({ message: error.message });
   }
 };
@@ -75,6 +93,7 @@ export const getCurrentUser = async (req, res) => {
     }
     res.status(200).json(user);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 };

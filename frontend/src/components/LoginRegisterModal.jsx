@@ -25,20 +25,17 @@ const LoginRegisterModal = () => {
     document.getElementById("login_modal")?.showModal();
   }, []);
 
-  const handleLocationConfirm = (coords) => {
-    if (coords) {
+  const handleLocationConfirm = (locationData) => {
+    if (locationData) {
       setFormData((prev) => ({
         ...prev,
-        location: { lat: coords.lat, lng: coords.lng },
+        location: locationData, // this now includes lat, lng, city
       }));
     }
     setShowLocationModal(false);
-
-    
     const modal = document.getElementById("login_modal");
     if (modal) modal.showModal();
   };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -46,7 +43,6 @@ const LoginRegisterModal = () => {
 
   const handleToggleMode = () => {
     if (isLogin) {
-     
       document.getElementById("login_modal")?.close();
       setIsLogin(false);
       setTimeout(() => setShowLocationModal(true), 200); // delay for smooth transition
@@ -56,6 +52,16 @@ const LoginRegisterModal = () => {
   };
 
   const handleSubmit = async (e) => {
+    console.log("Register payload:", {
+      name: formData.fullName,
+      email: formData.email,
+      password: formData.password,
+      role: formData.role,
+      location: {
+        type: "Point",
+        coordinates: [formData.location.lng, formData.location.lat],
+      },
+    });
     e.preventDefault();
     try {
       if (isLogin) {
@@ -63,44 +69,46 @@ const LoginRegisterModal = () => {
           toast.error("Please enter email and password");
           return;
         }
-        await dispatch(loginUser({
-          email: formData.email,
-          password: formData.password
-        })).unwrap();
+        await dispatch(
+          loginUser({
+            email: formData.email,
+            password: formData.password,
+          })
+        ).unwrap();
         document.getElementById("login_modal")?.close();
       } else {
         if (
           !formData.fullName ||
           !formData.email ||
           !formData.password ||
-          !formData.role ||
-          !formData.location.lat
+          !formData.role 
+        
         ) {
           toast.error("Please fill all fields & confirm location");
           return;
         }
-        const user = await dispatch(registerUser({
-          name: formData.fullName,
-          email: formData.email,
-          password: formData.password,
-          role: formData.role,
-          location: formData.location,
-        })).unwrap();
+         await dispatch(
+          registerUser({
+            name: formData.fullName,
+            email: formData.email,
+            password: formData.password,
+            role: formData.role,
+            location: {
+              type: "Point",
+             coordinates: [Number(formData.location.lng), Number(formData.location.lat)],
 
-        if (user?.id) {
-          socket.emit("updateLocation", {
-            userId: user.id,
-            latitude: formData.location.lat,
-            longitude: formData.location.lng,
-          });
-        }
+            },
+          })
+        ).unwrap();
 
-        // Switch to login after registration
         setIsLogin(true);
       }
     } catch (err) {
       toast.error(err?.message || "Something went wrong");
     }
+
+    console.log("Sending location:", formData.location);
+    console.log("Lat:", typeof(formData.location.lat), "Lng:",typeof( formData.location.lng));
   };
 
   return (
@@ -193,10 +201,7 @@ const LoginRegisterModal = () => {
               </div>
             )}
 
-            <button
-              className="btn btn-secondary w-full"
-              onClick={handleSubmit}
-            >
+            <button className="btn btn-secondary w-full" onClick={handleSubmit}>
               {isLogin ? "Login" : "Register"}
             </button>
           </div>
