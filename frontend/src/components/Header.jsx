@@ -12,8 +12,14 @@ const Header = () => {
 
       <div className="flex items-center gap-8 mr-15">
         <ul className="menu menu-horizontal gap-6 font-semibold hidden md:flex text-neutral">
-          <li>Home</li>
-          <li>Menus</li>
+          <Link to="/">
+            
+            <li>Home</li>
+          </Link>
+          <Link to="/menu">
+         
+            <li>Menus</li>
+          </Link>
           <li>Orders</li>
         </ul>
 
@@ -24,7 +30,7 @@ const Header = () => {
           Login
         </button>
 
-      <LoginRegisterModal/>
+        <LoginRegisterModal />
       </div>
     </div>
   );
