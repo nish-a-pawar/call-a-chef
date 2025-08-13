@@ -1,6 +1,6 @@
-import Meal from "../Schemas/productSchema.js";
+import Meal from "../models/mealSchema.js";
 
-// Create a meal
+
 export const createMealRepo = async (meal) => {
     try {
         return await Meal.create(meal);
@@ -9,7 +9,7 @@ export const createMealRepo = async (meal) => {
     }
 };
 
-// Get all meals
+
 export const getMealsRepo = async () => {
     try {
         return await Meal.find().lean();

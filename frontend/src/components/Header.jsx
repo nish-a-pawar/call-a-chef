@@ -1,7 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import LoginRegisterModal from "./LoginRegisterModal";
+import { useSelector, useDispatch } from "react-redux";
+import { logoutUser } from "../redux/authSlice";
 const Header = () => {
+
+   const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+
+  const handleLogout = () => {
+    dispatch(logoutUser());
+  };
   return (
     <div className="navbar bg-base-100 shadow-md px-6">
       <div className="flex-1">
@@ -23,12 +32,18 @@ const Header = () => {
           <li>Orders</li>
         </ul>
 
+       {isLoggedIn ? (
+        <button onClick={handleLogout} className="btn btn-secondary">
+          Logout
+        </button>
+      ) : (
         <button
-          className="btn btn-secondary font-semibold"
+          className="btn btn-secondary"
           onClick={() => document.getElementById("login_modal").showModal()}
         >
           Login
         </button>
+      )}
 
         <LoginRegisterModal />
       </div>
