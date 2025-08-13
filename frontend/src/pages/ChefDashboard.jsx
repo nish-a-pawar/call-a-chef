@@ -19,6 +19,7 @@ export default function ChefDashboard() {
     try {
       const res = await axiosInstance.post("/meals", meal);
       setMeals((prev) => [...prev, res.data]);
+      fetchMeals();
     } catch (error) {
       console.error("Error adding meal:", error);
     }
