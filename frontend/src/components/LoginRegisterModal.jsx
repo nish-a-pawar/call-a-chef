@@ -3,7 +3,7 @@ import { Eye, EyeOff, Lock, Mail, User, Users } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { loginUser, registerUser } from "../redux/authSlice";
 import { toast } from "react-hot-toast";
-
+import { useSelector } from "react-redux";
 import LocationModal from "./LocationModal";
 
 const LoginRegisterModal = () => {
@@ -11,7 +11,7 @@ const LoginRegisterModal = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showLocationModal, setShowLocationModal] = useState(false);
   const dispatch = useDispatch();
-
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -20,10 +20,12 @@ const LoginRegisterModal = () => {
     location: { lat: null, lng: null },
   });
 
-  // Show login modal on mount
-  useEffect(() => {
-    document.getElementById("login_modal")?.showModal();
-  }, []);
+ 
+   useEffect(() => {
+    if (!isLoggedIn) {
+      document.getElementById("login_modal")?.showModal();
+    }
+  }, [isLoggedIn]);
 
   const handleLocationConfirm = (locationData) => {
     if (locationData) {

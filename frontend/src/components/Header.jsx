@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import LoginRegisterModal from "./LoginRegisterModal";
 import { useSelector, useDispatch } from "react-redux";
 import { logoutUser } from "../redux/authSlice";
+import {ShoppingBag} from 'lucide-react';
 const Header = () => {
-
-   const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   const handleLogout = () => {
@@ -22,30 +22,34 @@ const Header = () => {
       <div className="flex items-center gap-8 mr-15">
         <ul className="menu menu-horizontal gap-6 font-semibold hidden md:flex text-neutral">
           <Link to="/">
-            
             <li>Home</li>
           </Link>
           <Link to="/menu">
-         
             <li>Menus</li>
           </Link>
           <li>Orders</li>
         </ul>
 
-       {isLoggedIn ? (
-        <button onClick={handleLogout} className="btn btn-secondary">
-          Logout
-        </button>
-      ) : (
-        <button
-          className="btn btn-secondary"
-          onClick={() => document.getElementById("login_modal").showModal()}
-        >
-          Login
-        </button>
-      )}
+        {isLoggedIn ? (
+          <button onClick={handleLogout} className="btn btn-secondary">
+            Logout
+          </button>
+        ) : (
+          <button
+            className="btn btn-secondary"
+            onClick={() => document.getElementById("login_modal").showModal()}
+          >
+            Login
+          </button>
+        )}
 
         <LoginRegisterModal />
+
+        {isLoggedIn && (
+          <Link to="/cart">
+            <ShoppingBag size={24} className="text-secondary"></ShoppingBag>
+          </Link>
+        )}
       </div>
     </div>
   );

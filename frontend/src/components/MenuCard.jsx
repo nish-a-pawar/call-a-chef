@@ -1,8 +1,10 @@
 import React from "react";
-
-function MenuCard({ image, title, description, price }) {
+import { useNavigate } from "react-router-dom";
+function MenuCard({ image, title, description, price ,id}) {
+   const navigate = useNavigate();
   return (
     <div className="w-full max-w-[290px] mx-auto bg-white border border-gray-200 rounded-xl shadow-md overflow-hidden transition-transform transform hover:scale-105 hover:shadow-xl duration-300 ease-in-out">
+      <div onClick={() => navigate(`/item-details/${id}`)} className="cursor-pointer">
       <div className="overflow-hidden">
         <img
           src={image}
@@ -28,6 +30,7 @@ function MenuCard({ image, title, description, price }) {
             Buy Now
           </button>
         </div>
+      </div>
       </div>
     </div>
   );

@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MenuCard from "../components/MenuCard";
 import axiosInstance from "../helpers/axiosInstance";
-import { useEffect } from "react";
 
 function MealsPage() {
   const [search, setSearch] = useState("");
   const [meals, setMeals] = useState([]);
+
 
   async function fetchMeals() {
     try {
@@ -39,16 +39,23 @@ function MealsPage() {
         />
       </div>
 
-      <div className="flex flex-wrap gap-4 justify-start items-start">
+      <div
+        className="flex flex-wrap gap-4 justify-start items-start"
+  
+      >
         {filteredMeals.length > 0 ? (
-          filteredMeals.map((meal, idx) => (
-            <MenuCard
-              key={idx}
-              image={meal.image}
-              title={meal.title}
-              description={meal.description}
-              price={meal.price}
-            />
+          filteredMeals.map((meal) => (
+            
+            <div key={meal._id}>
+              <MenuCard
+                image={meal.image}
+                title={meal.title}
+                description={meal.description}
+                price={meal.price}
+                id={meal._id}
+              />
+             
+            </div>
           ))
         ) : (
           <p className="text-2xl text-gray-500">No meal found</p>
