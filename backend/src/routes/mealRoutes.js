@@ -6,8 +6,12 @@ import {
     updateMeal,
     deleteMeal
 } from '../controllers/mealController.js';
+import { protect } from '../middlewares/authMiddlewares.js';
+import { authorizeRoles } from '../middlewares/authorizedRoles.js';
 
 const mealRouter = express.Router();
+mealRouter.use(protect);
+mealRouter.use(authorizeRoles('Chef'));
 
 // Create a meal
 mealRouter.post('/', createMeal);

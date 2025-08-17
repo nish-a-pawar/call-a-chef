@@ -1,8 +1,14 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../helpers/axiosInstance";
+
+import {useSelector} from 'react-redux'
 export default function ChefDashboard() {
   const [view, setView] = useState("add");
   const [meals, setMeals] = useState([]);
+  const {userData } = useSelector((state)=>state.auth)
+ 
+  
+ 
 
   // Fetch meals from backend
   const fetchMeals = async () => {
@@ -94,7 +100,7 @@ export default function ChefDashboard() {
       {/* Main Content */}
       <main className="flex-1 p-8">
         <h1 className="text-4xl font-bold mb-8 text-secondary text-center">
-          Chef Dashboard
+         <p>Welcome Chef, {userData.name}</p>
         </h1>
         <div className="bg-white p-6 rounded-xl shadow-md border border-base-200">
           {view === "add" && <AddFoodForm onAdd={addMeal} />}

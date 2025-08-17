@@ -66,7 +66,7 @@ const LocationModal = ({ isOpen, onClose, onConfirm }) => {
             <MapContainer
               center={[coords.lat, coords.lng]}
               zoom={15}
-              style={{ height: "100%", flex: 1 }}
+              style={{ height: "100%", width:"60%" ,flex: 1 }}
             >
               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
               <Marker position={[coords.lat, coords.lng]} icon={markerIcon}>

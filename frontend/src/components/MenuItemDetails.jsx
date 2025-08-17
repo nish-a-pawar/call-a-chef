@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useParams ,useNavigate } from "react-router-dom";
 import axiosInstance from "../helpers/axiosInstance";
-
+import toast from "react-hot-toast";
 const MenuItemDetails = () => {
   const [quantity, setQuantity] = useState(1);
-  const { id } = useParams(); // ✅ Get meal ID from URL
+  const { id } = useParams(); 
   const [meal, setMeal] = useState(null);
   const navigate =useNavigate();
 
@@ -12,7 +12,7 @@ const MenuItemDetails = () => {
 
   const decrementQuantity = () => {
     if (quantity > 1) setQuantity(quantity - 1);
-    else alert("Min quantity is 1");
+    else toast.error("Quantity cannot be less than 1")
   };
 useEffect(() => {
   async function fetchMeal() {
@@ -38,7 +38,7 @@ const handleAddToCart =()=>{
   return (
     <div className="card bg-base-100 w-96 shadow-sm">
       <figure>
-        <img src={meal.image} alt={meal.title} />
+        <img src={meal.image} alt={meal.title} className="w-full h-[25%] object-cover"/>
       </figure>
       <div className="card-body">
         <h2 className="card-title">

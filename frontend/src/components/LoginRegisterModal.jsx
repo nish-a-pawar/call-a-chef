@@ -20,8 +20,7 @@ const LoginRegisterModal = () => {
     location: { lat: null, lng: null },
   });
 
- 
-   useEffect(() => {
+  useEffect(() => {
     if (!isLoggedIn) {
       document.getElementById("login_modal")?.showModal();
     }
@@ -44,26 +43,10 @@ const LoginRegisterModal = () => {
   };
 
   const handleToggleMode = () => {
-    if (isLogin) {
-      document.getElementById("login_modal")?.close();
-      setIsLogin(false);
-      setTimeout(() => setShowLocationModal(true), 200); // delay for smooth transition
-    } else {
-      setIsLogin(true);
-    }
+    setIsLogin(!isLogin);
   };
 
   const handleSubmit = async (e) => {
-    console.log("Register payload:", {
-      name: formData.fullName,
-      email: formData.email,
-      password: formData.password,
-      role: formData.role,
-      location: {
-        type: "Point",
-        coordinates: [formData.location.lng, formData.location.lat],
-      },
-    });
     e.preventDefault();
     try {
       if (isLogin) {
@@ -83,13 +66,12 @@ const LoginRegisterModal = () => {
           !formData.fullName ||
           !formData.email ||
           !formData.password ||
-          !formData.role 
-        
+          !formData.role
         ) {
           toast.error("Please fill all fields & confirm location");
           return;
         }
-         await dispatch(
+        await dispatch(
           registerUser({
             name: formData.fullName,
             email: formData.email,
@@ -97,20 +79,20 @@ const LoginRegisterModal = () => {
             role: formData.role,
             location: {
               type: "Point",
-             coordinates: [Number(formData.location.lng), Number(formData.location.lat)],
-
+              coordinates: [
+                Number(formData.location.lng),
+                Number(formData.location.lat),
+              ],
             },
           })
         ).unwrap();
-
-        setIsLogin(true);
+        document.getElementById("login_modal")?.close();
+        setShowLocationModal(true);
+        setIsLogin(true)
       }
     } catch (err) {
       toast.error(err?.message || "Something went wrong");
     }
-
-    console.log("Sending location:", formData.location);
-    console.log("Lat:", typeof(formData.location.lat), "Lng:",typeof( formData.location.lng));
   };
 
   return (
