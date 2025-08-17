@@ -1,11 +1,19 @@
 import express from "express";
 import cors from "cors";
+import mongoose from "mongoose";
 import connectDB from "./config/db_config.js";
 import serverConfig from "./config/serverConfig.js";
 import userRouter from "./routes/userRoutes.js";
 import mealRouter from "./routes/mealRoutes.js";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+
+import http from "http";
+import cartRouter from "./routes/cartRoutes.js";
+
+
+
+
 
 dotenv.config();
 const app = express();
@@ -32,6 +40,16 @@ app.get("/ping", (req, res) => {
 app.use("/auth", userRouter);
 
 // Protected routes
+app.use("/api/cart", cartRouter);
+
+
+
+
+app.get("/check", (req, res) => {
+    res.send('Call-a-chef API is running');
+});
+
+// Routes
 app.use("/meals", mealRouter);
 
 // Health check

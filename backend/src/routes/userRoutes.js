@@ -6,5 +6,9 @@ const userRouter = express.Router();
 userRouter.post("/register", signup);
 userRouter.post("/login", login);
 userRouter.post("/logout", logout);
+userRouter.get("/ping", (req, res) => {
+  res.send("Router is working");
+});
+
 
 export default userRouter;
