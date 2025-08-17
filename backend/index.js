@@ -1,13 +1,12 @@
 import express from "express";
 import cors from "cors";
-import mongoose from "mongoose";
-import connectDB from "./config/db_config.js";
-import serverConfig from "./config/serverConfig.js";
-import userRouter from "./routes/userRoutes.js";
-import mealRouter from "./routes/mealRoutes.js"
+import connectDB from "./src/config/db_config.js";
+import serverConfig from "./src/config/serverConfig.js";
+import userRouter from "./src/routes/userRoutes.js";
+import mealRouter from "./src/routes/mealRoutes.js"
 import dotenv from "dotenv";
 import http from "http";
-import cartRouter from "./routes/cartRoutes.js";
+import cartRouter from "./src/routes/cartRoutes.js";
 
 
 
