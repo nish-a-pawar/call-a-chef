@@ -11,10 +11,6 @@ import cookieParser from "cookie-parser";
 import http from "http";
 import cartRouter from "./routes/cartRoutes.js";
 
-
-
-
-
 dotenv.config();
 const app = express();
 
@@ -25,6 +21,7 @@ app.use(
   cors({
     origin: process.env.FRONTEND_URL, // frontend URL
     credentials: true, // allow cookies
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   })
 );
 
@@ -41,8 +38,6 @@ app.use("/auth", userRouter);
 
 // Protected routes
 app.use("/api/cart", cartRouter);
-
-
 
 
 app.get("/check", (req, res) => {

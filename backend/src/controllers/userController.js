@@ -80,8 +80,8 @@ export const logout = (req, res) => {
     .cookie("token", "", {
       httpOnly: true,
       expires: new Date(0), // Past date to clear cookie
-      sameSite: isProduction ? "none" : "lax", // "none" for cross-site, "lax" for local dev
-      secure: isProduction, 
+      sameSite: isProduction ? "none" : "none", // "none" for cross-site, "lax" for local dev
+      secure: false
     })
     .status(200)
     .json({ message: "You've been successfully logged out!" });

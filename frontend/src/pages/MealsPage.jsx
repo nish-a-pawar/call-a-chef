@@ -9,13 +9,14 @@ function MealsPage() {
 
   async function fetchMeals() {
     try {
+      console.log("before hitting this url")
       const res = await axiosInstance.get("/meals");
       console.log(res);
       console.log(res.data);
       setMeals(res.data.data);
     } catch (error) {
-      console.log(error);
-      throw new Error("Error fetching meals");
+      console.error(error);
+      throw error;
     }
   }
 

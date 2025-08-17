@@ -14,7 +14,8 @@ export const getMealsRepo = async () => {
     try {
         return await Meal.find().lean();
     } catch (error) {
-        throw new Error(`Error fetching meals: ${error.message}`);
+        console.error(error);
+        throw error;
     }
 };
 

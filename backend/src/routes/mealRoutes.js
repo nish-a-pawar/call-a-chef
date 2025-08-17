@@ -11,10 +11,8 @@ import { authorizeRoles } from '../middlewares/authorizedRoles.js';
 
 const mealRouter = express.Router();
 mealRouter.use(protect);
-mealRouter.use(authorizeRoles('Chef'));
-
 // Create a meal
-mealRouter.post('/', createMeal);
+mealRouter.post('/',  authorizeRoles("chef"), createMeal);
 
 // Get all meals
 mealRouter.get('/', getMeals);
@@ -26,6 +24,6 @@ mealRouter.get('/:id', getMealById);
 mealRouter.put('/:id', updateMeal);
 
 // Delete a meal by ID
-mealRouter.delete('/:id', deleteMeal);
+mealRouter.delete('/:id', authorizeRoles("chef"), deleteMeal);
 
 export default mealRouter;

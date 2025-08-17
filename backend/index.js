@@ -7,9 +7,7 @@ import mealRouter from "./src/routes/mealRoutes.js"
 import dotenv from "dotenv";
 import http from "http";
 import cartRouter from "./src/routes/cartRoutes.js";
-
-
-
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const app = express();
@@ -22,6 +20,7 @@ app.use(
   })
 );
 app.use(express.json());
+app.use(cookieParser());
 
 app.get("/ping", (req, res) => {
   console.log(" Ping received");
