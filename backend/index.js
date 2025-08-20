@@ -28,9 +28,7 @@ app.get("/ping", (req, res) => {
 });
 
 app.use("/auth", userRouter);
-app.use("/api/cart", cartRouter);
-
-
+app.use("/cart", cartRouter);
 
 
 app.get("/check", (req, res) => {
