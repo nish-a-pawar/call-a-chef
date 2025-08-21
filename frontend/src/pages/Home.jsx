@@ -1,51 +1,61 @@
-import {  Leaf, Clock, Users, ChevronLeft, ChevronRight  } from "lucide-react";
-import { useEffect,useState } from "react";
+import { Leaf, Clock, Users, ChevronLeft, ChevronRight } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Typewriter } from "react-simple-typewriter";
 const testimonials = [
   {
-    quote: "The food was incredible! It felt like a gourmet meal prepared right in my kitchen. The chef was friendly and professional.",
+    quote:
+      "The food was incredible! It felt like a gourmet meal prepared right in my kitchen. The chef was friendly and professional.",
     author: "Jane D.",
-    city: "San Francisco, CA"
+    city: "San Francisco, CA",
   },
   {
-    quote: "Call-A-Chef made our anniversary dinner unforgettable. It was so personal and the quality was top-notch.",
+    quote:
+      "Call-A-Chef made our anniversary dinner unforgettable. It was so personal and the quality was top-notch.",
     author: "Mark S.",
-    city: "Seattle, WA"
+    city: "Seattle, WA",
   },
   {
-    quote: "Finally, an easy way to get healthy, home-cooked meals without all the hassle. I'm a regular user now!",
+    quote:
+      "Finally, an easy way to get healthy, home-cooked meals without all the hassle. I'm a regular user now!",
     author: "Emily R.",
-    city: "Austin, TX"
-  }
+    city: "Austin, TX",
+  },
 ];
 const Home = () => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
   // Function to navigate to the previous testimonial
   const goToPrevious = () => {
-    setCurrentTestimonial((prevIndex) => 
+    setCurrentTestimonial((prevIndex) =>
       prevIndex === 0 ? testimonials.length - 1 : prevIndex - 1
     );
   };
 
   // Function to navigate to the next testimonial
   const goToNext = () => {
-    setCurrentTestimonial((prevIndex) => 
-      (prevIndex + 1) % testimonials.length
-    );
+    setCurrentTestimonial((prevIndex) => (prevIndex + 1) % testimonials.length);
   };
-
 
   useEffect(() => {
     const timer = setInterval(goToNext, 5000); // Change testimonial every 5 seconds
-    return () => clearInterval(timer); 
+    return () => clearInterval(timer);
   }, []);
 
   return (
     <div className="min-h-screen bg-[#fff9f5]">
       <div className="flex flex-col md:flex-row">
         <div className="flex-1 flex flex-col justify-center items-start p-8 md:p-16 space-y-6">
-          <h1 className="text-4xl md:text-5xl font-bold text-[#4b2e2e] leading-tight">
-            Welcome to <span className="text-[tomato]">Call-A-Chef</span>
+          <h1 className="text-4xl md:text-5xl font-bold  leading-tight text-[tomato]">
+            {/* Welcome to <span className="text-[tomato]">Call-A-Chef</span> */}
+            <Typewriter
+              words={["Welcome to Call-A-Chef", "Order delicious food now!"]}
+              loop={0}
+              cursor
+              cursorStyle="|"
+              typeSpeed={60}
+              deleteSpeed={50}
+              delaySpeed={1000}
+            />
           </h1>
           <p className="text-lg text-[#5c4a4a] max-w-md">
             Enjoy home-style meals by skilled chefs near you. Fresh. Personal.
@@ -61,20 +71,20 @@ const Home = () => {
             </button>
           </div>
         </div>
-          <div className="flex-1 flex justify-center items-center mt-12 md:mt-0 animate-fade-in-right">
-        <div className="relative w-full max-w-lg md:max-w-none ">
-          <img
-            src="https://img.pikbest.com/png-images/20250123/indian-cuisine-plateer-on-white-background_11439458.png!bw700"
-            alt="Delicious Meal"
-            className="w-full h-full object-contain p-4 md:p-10"
-          />
-          <img
-            src="https://static.vecteezy.com/system/resources/previews/050/142/973/non_2x/cartoon-style-3d-chef-holding-spatula-and-giving-thumbs-up-icon-isolated-on-transparent-background-cutout-png.png"
-            alt="Chef"
-            className="absolute bottom-4 right-4 w-32 md:w-40 drop-shadow-lg hidden md:block"
-          />
+        <div className="flex-1 flex justify-center items-center mt-12 md:mt-0 animate-fade-in-right">
+          <div className="relative w-full max-w-lg md:max-w-none ">
+            <img
+              src="https://img.pikbest.com/png-images/20250123/indian-cuisine-plateer-on-white-background_11439458.png!bw700"
+              alt="Delicious Meal"
+              className="w-full h-full object-contain p-4 md:p-10"
+            />
+            <img
+              src="https://static.vecteezy.com/system/resources/previews/050/142/973/non_2x/cartoon-style-3d-chef-holding-spatula-and-giving-thumbs-up-icon-isolated-on-transparent-background-cutout-png.png"
+              alt="Chef"
+              className="absolute bottom-4 right-4 w-32 md:w-40 drop-shadow-lg hidden md:block"
+            />
+          </div>
         </div>
-      </div>
       </div>
 
       <section className="py-20">
@@ -114,8 +124,8 @@ const Home = () => {
           <h2 className="text-3xl font-bold mb-12">What Our Customers Say</h2>
           <div className="relative max-w-3xl mx-auto px-8 py-12 bg-white rounded-2xl shadow-2xl">
             <div className="flex justify-between items-center mb-6">
-              <button 
-                onClick={goToPrevious} 
+              <button
+                onClick={goToPrevious}
                 className="p-2 rounded-full bg-orange-200 text-orange-600 hover:bg-orange-300 transition-colors"
                 aria-label="Previous testimonial"
               >
@@ -124,8 +134,8 @@ const Home = () => {
               <p className="flex-1 text-2xl italic text-gray-700 mx-4 transition-opacity duration-500 ease-in-out opacity-100">
                 "{testimonials[currentTestimonial].quote}"
               </p>
-              <button 
-                onClick={goToNext} 
+              <button
+                onClick={goToNext}
                 className="p-2 rounded-full bg-orange-200 text-orange-600 hover:bg-orange-300 transition-colors"
                 aria-label="Next testimonial"
               >
@@ -134,12 +144,13 @@ const Home = () => {
             </div>
             <div className="text-lg font-semibold text-gray-800">
               - {testimonials[currentTestimonial].author}
-              <span className="block text-sm font-normal text-gray-500">{testimonials[currentTestimonial].city}</span>
+              <span className="block text-sm font-normal text-gray-500">
+                {testimonials[currentTestimonial].city}
+              </span>
             </div>
           </div>
         </div>
       </section>
-      
     </div>
   );
 };

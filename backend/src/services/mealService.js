@@ -3,7 +3,8 @@ import {
     getMealsRepo,
     findMealByIdRepo,
     updateMealRepo,
-    deleteMealRepo
+    deleteMealRepo,
+    getMealsByChefRepo
 } from "../repositories/mealRepository.js";
 
 export async function createMealServ(meal) {
@@ -33,5 +34,11 @@ export async function updateMealServ(id, data) {
 export async function deleteMealServ(id) {
     const res = await deleteMealRepo(id);
     if (!res) throw new Error("Meal not found or delete failed");
+    return res;
+}
+
+export async function getMealsByChefServ(chefId) {
+    const res = await getMealsByChefRepo(chefId);
+    if (!res || res.length === 0) throw new Error("No meals found for this chef");
     return res;
 }

@@ -1,15 +1,22 @@
 import {
     createMealServ,
     getMealsServ,
-    getMealByIdServ, // ✅ matches service name
+    getMealByIdServ, 
     updateMealServ,
-    deleteMealServ
+    deleteMealServ,
+    getMealsByChefServ
 } from "../services/mealService.js";
 
 // Create meal
 export async function createMeal(req, res) {
     try {
-        const meal = await createMealServ(req.body);
+        const mealData = { 
+      ...req.body, 
+      chefId: req.user._id  
+    };
+
+    const meal = await createMealServ(mealData);
+
         res.status(201).json({ success: true, message: "Meal created", data: meal });
     } catch (error) {
         res.status(400).json({ success: false, error: error.message });
@@ -54,4 +61,22 @@ export async function deleteMeal(req, res) {
     } catch (error) {
         res.status(400).json({ success: false, error: error.message });
     }
+}
+//getmealbychef
+export async function getMyMeals(req, res) {
+  try {
+    const meals = await getMealsByChefServ(req.user._id);
+
+    if (!meals || meals.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: "No meals found for this chef",
+        data: []
+      });
+    }
+
+    res.status(200).json({ success: true, data: meals });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
 }

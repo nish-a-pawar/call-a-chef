@@ -1,29 +1,40 @@
-import express from 'express';
+import express from "express";
 import {
-    createMeal,
-    getMeals,
-    getMealById,
-    updateMeal,
-    deleteMeal
-} from '../controllers/mealController.js';
-import { protect } from '../middlewares/authMiddlewares.js';
-import { authorizeRoles } from '../middlewares/authorizedRoles.js';
+  createMeal,
+  getMeals,
+  getMealById,
+  updateMeal,
+  deleteMeal,
+  getMyMeals,
+} from "../controllers/mealController.js";
+import { protect } from "../middlewares/authMiddlewares.js";
+import { authorizeRoles } from "../middlewares/authorizedRoles.js";
 
 const mealRouter = express.Router();
+
+/**
+ * Public routes
+ */
+mealRouter.get("/", getMeals);               // Get all meals (public)
+
+/**
+ * Protected routes
+ */
 mealRouter.use(protect);
-// Create a meal
-mealRouter.post('/',  authorizeRoles("chef"), createMeal);
 
-// Get all meals
-mealRouter.get('/', getMeals);
+// Specific chef’s meals must come BEFORE "/:id"
+mealRouter.get("/my-meals", authorizeRoles("chef"), getMyMeals); 
 
-// ✅ Get a meal by ID
-mealRouter.get('/:id', getMealById);
+// Create a meal (Chef only)
+mealRouter.post("/", authorizeRoles("chef"), createMeal);
 
-// Update a meal by ID
-mealRouter.put('/:id', updateMeal);
+// Update meal by ID (Chef only)
+mealRouter.put("/:id", authorizeRoles("chef"), updateMeal);
 
-// Delete a meal by ID
-mealRouter.delete('/:id', authorizeRoles("chef"), deleteMeal);
+// Delete meal by ID (Chef only)
+mealRouter.delete("/:id", authorizeRoles("chef"), deleteMeal);
+
+// Get meal by ID (public but moved at last to avoid conflict)
+mealRouter.get("/:id", getMealById);
 
 export default mealRouter;

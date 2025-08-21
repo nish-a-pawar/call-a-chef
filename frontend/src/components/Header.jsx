@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import LoginRegisterModal from "./LoginRegisterModal";
 import { useSelector, useDispatch } from "react-redux";
 import { logoutUser } from "../redux/authSlice";
-import {ShoppingBag ,ChefHat} from 'lucide-react';
+import { ShoppingBag, ChefHat } from "lucide-react";
 const Header = () => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -14,10 +14,12 @@ const Header = () => {
   return (
     <div className="navbar bg-base-100 shadow-md px-6">
       <div className="flex-1">
-        <h1 className="text-2xl flex items-center gap-5 font-extrabold tracking-wide text-[tomato]">
-          <ChefHat size={30} ></ChefHat>
-          Call-A-Chef
-        </h1>
+        <Link to="/">
+          <h1 className="text-2xl flex items-center gap-5 font-extrabold tracking-wide text-[tomato]">
+            <ChefHat size={30}></ChefHat>
+            Call-A-Chef
+          </h1>
+        </Link>
       </div>
 
       <div className="flex items-center gap-8 mr-15">

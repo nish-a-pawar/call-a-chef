@@ -13,7 +13,7 @@ export default function ChefDashboard() {
   // Fetch meals from backend
   const fetchMeals = async () => {
     try {
-      const res = await axiosInstance.get("/meals");
+      const res = await axiosInstance.get("/meals/my-meals");
       setMeals(res.data.data || []);
     } catch (error) {
       console.error("Error fetching meals:", error);

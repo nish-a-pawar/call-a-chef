@@ -48,3 +48,12 @@ export const deleteMealRepo = async (id) => {
         throw new Error(`Error deleting meal: ${error.message}`);
     }
 };
+
+// mealRepo.js
+export const getMealsByChefRepo = async (chefId) => {
+    try {
+        return await Meal.find({ chefId: chefId }).lean(); 
+    } catch (error) {
+        throw new Error(`Error fetching meals: ${error.message}`);
+    }
+};
