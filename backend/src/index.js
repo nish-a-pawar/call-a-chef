@@ -10,6 +10,7 @@ import cookieParser from "cookie-parser";
 
 import http from "http";
 import cartRouter from "./routes/cartRoutes.js";
+import adminRouter from "./routes/adminRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -41,11 +42,12 @@ app.use("/cart", cartRouter);
 
 
 app.get("/check", (req, res) => {
-    res.send('Call-a-chef API is running');
+  res.send('Call-a-chef API is running');
 });
 
 // Routes
 app.use("/meals", mealRouter);
+app.use("/admin", adminRouter);
 
 // Health check
 app.get("/check", (req, res) => {
