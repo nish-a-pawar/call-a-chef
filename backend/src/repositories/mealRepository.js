@@ -10,6 +10,21 @@ export const createMealRepo = async (meal) => {
 };
 
 
+export const getMealsByLocationRepo = async (city) => {
+  try {
+    return await Meal.find()
+      .populate({
+        path: "chefId",
+        match: { city: city }, // filter chefs by city
+        select: "name city"    // only return chef name + city
+      })
+      .lean();
+  } catch (error) {
+    throw new Error(`Error fetching meals by location: ${error.message}`);
+  }
+};
+
+
 export const getMealsRepo = async () => {
     try {
         return await Meal.find().lean();

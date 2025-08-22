@@ -42,3 +42,10 @@ export async function getMealsByChefServ(chefId) {
     if (!res || res.length === 0) throw new Error("No meals found for this chef");
     return res;
 }
+
+export async function getMealsByLocationServ(city) {
+  const meals = await getMealsByLocationRepo(city);
+
+  // filter out meals where chefId is null (because of city mismatch)
+  return meals.filter(m => m.chefId);
+}

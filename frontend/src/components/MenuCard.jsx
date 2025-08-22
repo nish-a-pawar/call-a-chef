@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import AddToCartButton from "./AddToCartButton"; // 👈 import
+import AddToCartButton from "./AddToCartButton"; 
 
 function MenuCard({ image, title, description, price, id }) {
   const navigate = useNavigate();
@@ -9,7 +9,7 @@ function MenuCard({ image, title, description, price, id }) {
     <div className="w-full max-w-[290px] mx-auto bg-white border border-gray-200 rounded-xl shadow-md overflow-hidden transition-transform transform hover:scale-105 hover:shadow-xl duration-300 ease-in-out">
       
       <div 
-        className="overflow-hidden cursor-pointer"
+        className="overflow-hidden cursor-pointer w-[400px]"
         onClick={() => navigate(`/item-details/${id}`)}
       >
         <img
@@ -21,7 +21,7 @@ function MenuCard({ image, title, description, price, id }) {
 
       <div className="p-4 space-y-3">
         <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
-        <p className="text-sm text-gray-600">{description}</p>
+        <p className="text-sm text-gray-600 line-clamp-2">{description}</p>
         <span className="text-lg font-bold text-secondary block">₹{price}</span>
 
         <div className="flex gap-3">

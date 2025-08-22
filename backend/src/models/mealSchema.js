@@ -12,8 +12,8 @@ const mealSchema = new mongoose.Schema({
     description: {
         type: String,
         trim: true,
-        minLength: [10, "The meal title must have atleast 10 characters"],
-        maxLength: [50, "The meal title must have atmost 50 characters"],
+        minLength: [5, "The meal description must have atleast 10 characters"],
+       
         required: true
     },
 

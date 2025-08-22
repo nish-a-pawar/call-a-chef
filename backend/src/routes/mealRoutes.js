@@ -6,6 +6,7 @@ import {
   updateMeal,
   deleteMeal,
   getMyMeals,
+  getMealsByLocation
 } from "../controllers/mealController.js";
 import { protect } from "../middlewares/authMiddlewares.js";
 import { authorizeRoles } from "../middlewares/authorizedRoles.js";
@@ -16,6 +17,8 @@ const mealRouter = express.Router();
  * Public routes
  */
 mealRouter.get("/", getMeals);               // Get all meals (public)
+
+mealRouter.get("/nearby",protect, getMealsByLocation);
 
 /**
  * Protected routes
