@@ -10,6 +10,7 @@ import MenuItemDetails from "./components/MenuItemDetails.jsx";
 import ProtectedRoutes from "./components/ProtectedRoutes.jsx";
 import Denied from "./pages/Denied.jsx";
 import OrderConfirmation from "./pages/OrderConfirmation.jsx";
+import AdminDashboard from "./pages/AdminDashboard.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -38,6 +39,15 @@ function App() {
           element={
             <ProtectedRoutes allowedRoles={["Chef"]}>
               <ChefDashboard />
+            </ProtectedRoutes>
+          }
+        />
+
+        <Route
+          path="/admin-dashboard"
+          element={
+            <ProtectedRoutes allowedRoles={["Admin"]}>
+              <AdminDashboard />
             </ProtectedRoutes>
           }
         />
