@@ -3,8 +3,6 @@ import MenuCard from "../components/MenuCard";
 import axiosInstance from "../helpers/axiosInstance";
 import { useSelector } from "react-redux"
 
-
-
 function MealsPage() {
   const [search, setSearch] = useState("");
   const [meals, setMeals] = useState([]);
@@ -19,7 +17,7 @@ function MealsPage() {
       const res = await axiosInstance.get("meals/nearby");
       console.log("API response received:", res.data);
 
-      // ✅ Add a check to ensure the data is an array before setting state
+      // Add a check to ensure the data is an array before setting state
       if (res.data && Array.isArray(res.data.data)) {
         setMeals(res.data.data);
       } else {
@@ -62,58 +60,55 @@ function MealsPage() {
   }
 
   return (
-    <div className="px-4">
+  <div className="px-4">
 
-      <div className="mt-8 mb-6 text-center">
-        {userData?.name ? (
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-800">
-            Hello, {userData.name}!
-          </h1>
-        ) : (
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-800">
-            Hello there!
-          </h1>
-        )}
-        <p className="text-xl sm:text-2xl text-gray-600 mt-2">
-          Serving delicious meals in {userData?.city || "your city"}
-        </p>
-      </div>
-      
-      <div className="my-6 flex justify-center">
-        <input
-          type="text"
-          placeholder="Search meals..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full max-w-md px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
-        />
-      </div>
-
-      <div
-        className="flex flex-wrap gap-4 justify-start items-start"
-  
-      >
-        
-        {filteredMeals.length > 0 ? (
-          filteredMeals.map((meal) => (
-            
-            <div key={meal._id}>
-              <MenuCard
-                image={meal.image}
-                title={meal.title}
-                description={meal.description}
-                price={meal.price}
-                id={meal._id}
-              />
-             
-            </div>
-          ))
-        ) : (
-          <p className="text-2xl text-gray-500">No meal found</p>
-        )}
-      </div>
+    <div className="mt-8 mb-6 text-center">
+      {userData?.name ? (
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-800">
+          Hello, {userData.name}!
+        </h1>
+      ) : (
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-800">
+          Hello there!
+        </h1>
+      )}
+      <p className="text-xl sm:text-2xl text-gray-600 mt-2">
+        Serving delicious meals in {userData?.city || "your city"}
+      </p>
     </div>
-  );
+    
+    <div className="my-6 flex justify-center">
+      <input
+        type="text"
+        placeholder="Search meals..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="w-full max-w-md px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+      />
+    </div>
+
+    {/* Change flex → grid */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 place-items-center">
+      {filteredMeals.length > 0 ? (
+        filteredMeals.map((meal) => (
+          <MenuCard
+            key={meal._id}
+            image={meal.image}
+            title={meal.title}
+            description={meal.description}
+            price={meal.price}
+            id={meal._id}
+          />
+        ))
+      ) : (
+        <p className="text-2xl text-gray-500 col-span-full text-center">
+          No meal found
+        </p>
+      )}
+    </div>
+  </div>
+);
+
 }
 
 export default MealsPage;
