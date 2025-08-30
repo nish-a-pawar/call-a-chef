@@ -13,7 +13,7 @@ const LoginRegisterModal = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showLocationModal, setShowLocationModal] = useState(false);
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn); 
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",

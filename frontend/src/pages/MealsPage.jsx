@@ -68,7 +68,7 @@ function MealsPage() {
   }
 
   return (
-    <div className="px-4">
+  <div className="px-4">
 
       <div className="mt-8 mb-6 text-center">
         {userData?.name ? (
