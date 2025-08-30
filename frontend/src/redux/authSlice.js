@@ -120,16 +120,17 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        const user = action.payload.user;
+         const { user, token } = action.payload;
+         
         state.isLoggedIn = true;
         state.role = user.role;
-        state.userData = user;
+        state.userData = { ...user, token }; 
         state.loading = false;
         state.error = null;
 
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("role", user.role);
-        localStorage.setItem("userData", JSON.stringify(user));
+        localStorage.setItem("userData", JSON.stringify({ ...user, token }));
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;

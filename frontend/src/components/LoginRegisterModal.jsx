@@ -5,8 +5,10 @@ import { loginUser, registerUser } from "../redux/authSlice";
 import { toast } from "react-hot-toast";
 import { useSelector } from "react-redux";
 import LocationModal from "./LocationModal";
-
+import {useNavigate} from 'react-router-dom';
 const LoginRegisterModal = () => {
+   const { userData } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [showLocationModal, setShowLocationModal] = useState(false);
@@ -19,6 +21,9 @@ const LoginRegisterModal = () => {
     role: "",
     location: { lat: null, lng: null },
   });
+ 
+
+  
 
   useEffect(() => {
     if (!isLoggedIn) {

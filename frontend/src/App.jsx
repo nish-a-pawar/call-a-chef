@@ -10,6 +10,7 @@ import MenuItemDetails from "./components/MenuItemDetails.jsx";
 import ProtectedRoutes from "./components/ProtectedRoutes.jsx";
 import Denied from "./pages/Denied.jsx";
 import OrderConfirmation from "./pages/OrderConfirmation.jsx";
+import CheckoutPage from "./pages/CheckoutPage.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -28,6 +29,9 @@ function App() {
 
         <Route path="/cart" element={<MainLayout />}>
           <Route index element={<Cart />} />
+        </Route>
+         <Route path="/checkout" element={<MainLayout />}>
+          <Route index element={<CheckoutPage />} />
         </Route>
         <Route path="/order-confirmation" element={<MainLayout />}>
           <Route index element={<OrderConfirmation />} />

@@ -7,7 +7,7 @@ import userRouter from "./routes/userRoutes.js";
 import mealRouter from "./routes/mealRoutes.js";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
-
+import orderRouter from "./routes/orderRoutes.js";
 import http from "http";
 import cartRouter from "./routes/cartRoutes.js";
 
@@ -21,24 +21,20 @@ app.use(
   cors({
     origin: process.env.FRONTEND_URL, // frontend URL
     credentials: true, // allow cookies
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS","PATCH"],
   })
 );
 
 app.use(express.json());
 
-// Test route
-app.get("/ping", (req, res) => {
-  console.log("Ping received");
-  res.send("Call-a-chef api is running! Pong!!");
-});
+
 
 // Public routes
 app.use("/auth", userRouter);
 
 // Protected routes
 app.use("/cart", cartRouter);
-
+app.use("/orders" ,orderRouter);
 
 app.get("/check", (req, res) => {
     res.send('Call-a-chef API is running');

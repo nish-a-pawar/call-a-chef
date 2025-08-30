@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import MenuCard from "../components/MenuCard";
 import axiosInstance from "../helpers/axiosInstance";
-import { useSelector } from "react-redux"
-
+import { useSelector ,useDispatch } from "react-redux"
+import { addToCart } from "../redux/cartSlice";
 
 
 function MealsPage() {
@@ -11,19 +11,20 @@ function MealsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null); 
   const { userData } = useSelector((state) => state.auth);
+   const dispatch = useDispatch();
   async function fetchMeals() {
     try {
-      setLoading(true); // Set loading to true before fetching
-      setError(null);   // Clear any previous errors
+      setLoading(true);
+      setError(null);   
 
       const res = await axiosInstance.get("meals/nearby");
       console.log("API response received:", res.data);
 
-      // ✅ Add a check to ensure the data is an array before setting state
+      
       if (res.data && Array.isArray(res.data.data)) {
         setMeals(res.data.data);
       } else {
-        // If the data format is unexpected, set an error
+        
         throw new Error("Invalid data format received from server.");
       }
       
@@ -32,7 +33,7 @@ function MealsPage() {
       setError(err.message || "Failed to fetch meals. Please try again.");
       
     } finally {
-      setLoading(false); // Always set loading to false when the process finishes
+      setLoading(false); 
     }
   }
 
@@ -40,7 +41,12 @@ function MealsPage() {
     fetchMeals();
   }, []);
 
-  // Now, the filter is safe because 'meals' is guaranteed to be an array
+   const handleAddToCart = (meal) => {
+    dispatch(addToCart(meal));
+  };
+
+
+  
   const filteredMeals = meals.filter((meal) =>
     meal.title.toLowerCase().includes(search.toLowerCase())
   );
@@ -104,6 +110,8 @@ function MealsPage() {
                 description={meal.description}
                 price={meal.price}
                 id={meal._id}
+                meal={meal} 
+                onAddToCart={handleAddToCart} 
               />
              
             </div>

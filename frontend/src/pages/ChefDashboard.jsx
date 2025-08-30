@@ -1,15 +1,20 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../helpers/axiosInstance";
 
-import {useSelector} from 'react-redux'
-export default function ChefDashboard() {
+import { useSelector, useDispatch } from "react-redux";
+import {
+  fetchOrdersByChefThunk,
+  updateOrderStatusThunk,
+} from "../redux/orderSlice";
+
+import { useNavigate } from "react-router-dom";
+const ChefDashboard = () => {
   const [view, setView] = useState("add");
   const [meals, setMeals] = useState([]);
-  const {userData } = useSelector((state)=>state.auth)
- 
-  
- 
-
+  const { userData } = useSelector((state) => state.auth);
+  console.log("chef dashboard user data", userData);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   // Fetch meals from backend
   const fetchMeals = async () => {
     try {
@@ -20,7 +25,6 @@ export default function ChefDashboard() {
     }
   };
 
-  // Add a meal
   const addMeal = async (meal) => {
     try {
       const res = await axiosInstance.post("/meals", meal);
@@ -31,7 +35,6 @@ export default function ChefDashboard() {
     }
   };
 
-  // Delete a meal
   const deleteMeal = async (id) => {
     try {
       await axiosInstance.delete(`/meals/${id}`);
@@ -62,7 +65,9 @@ export default function ChefDashboard() {
     <div className="flex min-h-screen bg-base-100">
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r border-base-200 p-6 shadow-md">
-        <h2 className="text-2xl font-bold mb-8 text-secondary">👨‍🍳 Chef Panel</h2>
+        <h2 className="text-2xl font-bold mb-8 text-secondary">
+          👨‍🍳 Chef Panel
+        </h2>
         <ul className="space-y-4">
           <li>
             <button
@@ -78,7 +83,9 @@ export default function ChefDashboard() {
             <button
               onClick={() => setView("viewFoods")}
               className={`btn w-full ${
-                view === "viewFoods" ? "btn-secondary text-white" : "btn-outline"
+                view === "viewFoods"
+                  ? "btn-secondary text-white"
+                  : "btn-outline"
               }`}
             >
               View Foods
@@ -86,12 +93,29 @@ export default function ChefDashboard() {
           </li>
           <li>
             <button
-              onClick={() => setView("orders")}
+              onClick={() => {
+                setView("orders");
+                if (userData?._id && userData.role === "Chef") {
+                  console.log(
+                    "Dispatching fetchOrdersByChefThunk from ChefDashboard:",
+                    userData._id
+                  );
+                  dispatch(fetchOrdersByChefThunk(userData._id));
+                }
+              }}
               className={`btn w-full ${
                 view === "orders" ? "btn-secondary text-white" : "btn-outline"
               }`}
             >
               View Orders
+            </button>
+          </li>
+          <li>
+            <button
+              onClick={() => navigate("/")}
+              className="btn w-full btn-outline hover:btn-secondary"
+            >
+              Back to Home
             </button>
           </li>
         </ul>
@@ -100,19 +124,23 @@ export default function ChefDashboard() {
       {/* Main Content */}
       <main className="flex-1 p-8">
         <h1 className="text-4xl font-bold mb-8 text-secondary text-center">
-         <p>Welcome Chef, {userData.name}</p>
+          <p>Welcome Chef, {userData.name}</p>
         </h1>
         <div className="bg-white p-6 rounded-xl shadow-md border border-base-200">
           {view === "add" && <AddFoodForm onAdd={addMeal} />}
           {view === "viewFoods" && (
-            <ViewFoods meals={meals} onDelete={deleteMeal} onUpdate={updateMeal} />
+            <ViewFoods
+              meals={meals}
+              onDelete={deleteMeal}
+              onUpdate={updateMeal}
+            />
           )}
-          {view === "orders" && <ViewOrders />}
+          {view === "orders" && <ViewOrders userData={userData} />}
         </div>
       </main>
     </div>
   );
-}
+};
 
 // Add Food Form
 function AddFoodForm({ onAdd }) {
@@ -209,7 +237,12 @@ function ViewFoods({ meals, onDelete, onUpdate }) {
   };
 
   const saveEdit = async () => {
-    await onUpdate(editId, { name: editTitle, description: editDescription, price: editPrice, image: editImage });
+    await onUpdate(editId, {
+      name: editTitle,
+      description: editDescription,
+      price: editPrice,
+      image: editImage,
+    });
     setEditId(null);
   };
 
@@ -219,12 +252,22 @@ function ViewFoods({ meals, onDelete, onUpdate }) {
 
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-4 text-secondary"> Meals Added</h2>
+      <h2 className="text-xl font-semibold mb-4 text-secondary">
+        {" "}
+        Meals Added
+      </h2>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {meals.map((meal) => (
-          <div key={meal._id} className="card bg-base-100 shadow-md border border-base-200">
+          <div
+            key={meal._id}
+            className="card bg-base-100 shadow-md border border-base-200"
+          >
             <figure>
-              <img src={meal.image} alt={meal.title} className="h-40 w-full object-cover" />
+              <img
+                src={meal.image}
+                alt={meal.title}
+                className="h-40 w-full object-cover"
+              />
             </figure>
             <div className="card-body">
               {editId === meal._id ? (
@@ -253,10 +296,16 @@ function ViewFoods({ meals, onDelete, onUpdate }) {
                     onChange={(e) => setEditImage(e.target.value)}
                     className="input input-bordered mb-2"
                   />
-                  <button onClick={saveEdit} className="btn btn-success btn-sm mr-2">
+                  <button
+                    onClick={saveEdit}
+                    className="btn btn-success btn-sm mr-2"
+                  >
                     Save
                   </button>
-                  <button onClick={() => setEditId(null)} className="btn btn-ghost btn-sm">
+                  <button
+                    onClick={() => setEditId(null)}
+                    className="btn btn-ghost btn-sm"
+                  >
                     Cancel
                   </button>
                 </>
@@ -264,7 +313,9 @@ function ViewFoods({ meals, onDelete, onUpdate }) {
                 <>
                   <h3 className="card-title">{meal.name}</h3>
                   <p className="text-gray-600 font-bold">{meal.title}</p>
-                  <p className="text-gray-600 font-medium">{meal.description}</p>
+                  <p className="text-gray-600 font-medium">
+                    {meal.description}
+                  </p>
                   <p>₹{meal.price}</p>
                   <div className="mt-2 flex gap-2">
                     <button
@@ -291,21 +342,35 @@ function ViewFoods({ meals, onDelete, onUpdate }) {
 }
 
 // View Orders
-function ViewOrders() {
-  const [orders, setOrders] = useState([
-    { _id: 1, mealName: "Dosa", customerName: "John Doe", qty: 2 },
-    { _id: 2, mealName: "Idli", customerName: "Jane Smith", qty: 1 },
-  ]);
+function ViewOrders({ userData }) {
+  const dispatch = useDispatch();
+  const ordersState = useSelector((state) => state.orders); // ✅ correct slice
+  const orders = ordersState?.orders ?? [];
 
-  // useEffect(() => {
-  //   axiosInstance.get("/orders").then((res) => {
-  //     setOrders(res.data.data || []);
-  //   });
-  // }, []);
+  useEffect(() => {
+    console.log("ViewOrders mounted, userData:", userData);
+    if (userData?.id && userData.role === "Chef") {
+      dispatch(fetchOrdersByChefThunk(userData.id)); // ✅ use id, not _id
+    }
+  }, [userData, dispatch]);
 
-  // if (!orders.length) {
-  //   return <p className="text-gray-500 text-center">No orders yet.</p>;
-  // }
+  const handleAccept = (orderId) => {
+    dispatch(updateOrderStatusThunk({ orderId, status: "Accepted" }));
+  };
+
+  const handleReject = (orderId) => {
+    dispatch(updateOrderStatusThunk({ orderId, status: "Rejected" }));
+  };
+
+  if (!orders?.length) {
+    return <p className="text-gray-500 text-center">No orders yet.</p>;
+  }
+
+
+
+  if (!orders?.length) {
+    return <p className="text-gray-500 text-center">No orders yet.</p>;
+  }
 
   return (
     <div className="overflow-x-auto">
@@ -315,16 +380,51 @@ function ViewOrders() {
             <th>#</th>
             <th>Meal</th>
             <th>Customer</th>
-            <th>Qty</th>
+            <th>Total</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody>
           {orders.map((order, index) => (
             <tr key={order._id}>
               <td>{index + 1}</td>
-              <td>{order.mealName}</td>
-              <td>{order.customerName}</td>
-              <td>{order.qty}</td>
+              <td>
+                {order.items.map((item) => (
+                  <div key={item.productId}>
+                    {item.name} x {item.quantity}
+                  </div>
+                ))}
+              </td>
+              <td>{order.user?.name || "Unknown"}</td>
+              <td>₹{order.totalPrice}</td>
+              <td>
+                {order.status === "Pending" ? (
+                  <button
+                    className="btn btn-sm btn-outline hover:btn-success"
+                    onClick={() => handleAccept(order._id)}
+                  >
+                    Accept
+                  </button>
+                ) : (
+                  <span className="text-green-600 font-semibold">
+                    {order.status} ✅
+                  </span>
+                )}
+              </td>
+              <td>
+                {order.status === "Pending" ? (
+                  <button
+                    className="btn btn-sm btn-outline hover:btn-error"
+                    onClick={() => handleReject(order._id)}
+                  >
+                    Reject
+                  </button>
+                ) : (
+                  <span className="text-green-600 font-semibold">
+                    {order.status} ✅
+                  </span>
+                )}
+              </td>
             </tr>
           ))}
         </tbody>
@@ -332,3 +432,5 @@ function ViewOrders() {
     </div>
   );
 }
+
+export default ChefDashboard;

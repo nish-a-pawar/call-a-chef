@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector ,useDispatch} from "react-redux";
+import { setCartItems ,updateQuantity} from "../redux/cartSlice";
 import axiosInstance from "../helpers/axiosInstance";
 import CartItem from "../components/CartItem";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const { userData } = useSelector((state) => state.auth); // Get userData from Redux state
@@ -10,13 +12,20 @@ const Cart = () => {
   const [cart, setCart] = useState({ items: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+   const navigate = useNavigate();
+    const dispatch = useDispatch();
 
+  const cartItems = useSelector((state) => state.cart.cartItems);
   // Fetch cart data on component mount
   useEffect(() => {
     if (userId) {
       fetchCart();
     }
   }, [userId]);
+
+  const handleCheckout =()=>{
+    navigate('/checkout')
+  }
 
   const fetchCart = async () => {
     if (!userId) {
@@ -29,6 +38,7 @@ const Cart = () => {
       setLoading(true);
       const response = await axiosInstance.get(`/cart/${userId}`);
       setCart(response.data);
+       dispatch(setCartItems(response.data.items));
       setError(null);
     } catch (error) {
       console.error("Error fetching cart:", error);
@@ -80,7 +90,6 @@ const Cart = () => {
   setCart(updatedCart);
 };
 
-  // Calculate total
   const calculateTotal = () => {
     return cart.items.reduce((total, item) => total + (item.price * item.quantity), 0);
   };
@@ -150,7 +159,8 @@ const Cart = () => {
           </div>
           
           <div className="flex justify-center mt-6">
-            <button className="btn btn-primary btn-lg">
+            <button className="btn btn-primary btn-lg" onClick={handleCheckout}>
+              
               Proceed to Checkout
             </button>
           </div>

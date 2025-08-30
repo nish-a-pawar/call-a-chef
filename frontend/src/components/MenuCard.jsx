@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import AddToCartButton from "./AddToCartButton"; 
 
-function MenuCard({ image, title, description, price, id }) {
+function MenuCard({ image, title, description, price, id ,meal, onAddToCart }) {
   const navigate = useNavigate();
 
   return (
@@ -25,19 +25,20 @@ function MenuCard({ image, title, description, price, id }) {
         <span className="text-lg font-bold text-secondary block">₹{price}</span>
 
         <div className="flex gap-3">
-          {/* ✅ Use AddToCartButton */}
+      
           <AddToCartButton
             productId={id}
             name={title}
             price={price}
             image={image}
             quantity={1}
+            onClick={() => onAddToCart(meal)}
             className="flex-1 px-4 py-2 text-sm font-medium text-white bg-gray-500 rounded-md hover:bg-amber-500 transition-colors duration-200"
           />
 
           <button
             className="flex-1 px-4 py-2 text-sm font-medium cursor-pointer text-white bg-gray-500 rounded-md hover:bg-amber-500 transition-colors duration-200"
-            onClick={() => navigate(`/checkout/${id}`)} // or your buy-now flow
+            onClick={() => navigate(`/checkout/${id}`)} 
           >
             Buy Now
           </button>
