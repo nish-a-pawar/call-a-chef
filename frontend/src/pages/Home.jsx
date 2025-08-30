@@ -1,6 +1,6 @@
 import { Leaf, Clock, Users, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Typewriter } from "react-simple-typewriter";
+import { motion } from "framer-motion";
 const testimonials = [
   {
     quote:
@@ -45,22 +45,24 @@ const Home = () => {
     <div className="min-h-screen bg-[#fff9f5]">
       <div className="flex flex-col md:flex-row">
         <div className="flex-1 flex flex-col justify-center items-start p-8 md:p-16 space-y-6">
-          <h1 className="text-4xl md:text-5xl font-bold  leading-tight text-[tomato]">
-            {/* Welcome to <span className="text-[tomato]">Call-A-Chef</span> */}
-            <Typewriter
-              words={["Welcome to Call-A-Chef", "Order delicious food now!"]}
-              loop={0}
-              cursor
-              cursorStyle="|"
-              typeSpeed={60}
-              deleteSpeed={50}
-              delaySpeed={1000}
-            />
-          </h1>
-          <p className="text-lg text-[#5c4a4a] max-w-md">
-            Enjoy home-style meals by skilled chefs near you. Fresh. Personal.
-            Authentic.
-          </p>
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+            className="text-4xl md:text-5xl font-bold leading-tight text-[tomato]"
+          >
+            Welcome to Call-A-Chef
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.6 }}
+            className="mt-4 text-lg text-gray-600"
+          >
+            Savor authentic, home-style meals crafted by skilled local chefs.
+            Freshly prepared, personalized to your taste, and delivered with a
+            touch of genuine care.
+          </motion.p>
 
           <div className="space-x-4">
             <button className="btn btn-secondary text-white border-none hover:bg-secondary/80">
@@ -72,16 +74,16 @@ const Home = () => {
           </div>
         </div>
         <div className="flex-1 flex justify-center items-center mt-12 md:mt-0 animate-fade-in-right">
-          <div className="relative w-full max-w-lg md:max-w-none ">
+          <div className="relative w-full max-w-lg md:max-w-none">
             <img
               src="https://img.pikbest.com/png-images/20250123/indian-cuisine-plateer-on-white-background_11439458.png!bw700"
               alt="Delicious Meal"
-              className="w-full h-full object-contain p-4 md:p-10"
+              className="h-[500px] object-contain p-2 md:p-4" // reduced padding
             />
             <img
               src="https://static.vecteezy.com/system/resources/previews/050/142/973/non_2x/cartoon-style-3d-chef-holding-spatula-and-giving-thumbs-up-icon-isolated-on-transparent-background-cutout-png.png"
               alt="Chef"
-              className="absolute bottom-4 right-4 w-32 md:w-40 drop-shadow-lg hidden md:block"
+              className="absolute bottom-2 right-2 w-28 md:w-36 drop-shadow-lg hidden md:block" // moved closer
             />
           </div>
         </div>
